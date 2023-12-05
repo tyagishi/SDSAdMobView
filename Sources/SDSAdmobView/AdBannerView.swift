@@ -5,6 +5,7 @@
 //  Created by Tomoaki Yagishita on 2020/03/11.
 //  Copyright © 2020 SmallDeskSoftware. All rights reserved.
 //
+
 #if os(iOS)
 import Foundation
 import SwiftUI
@@ -35,6 +36,19 @@ public enum AdBannerSize {
         if UIDevice.current.userInterfaceIdiom == .phone { return GADAdSizeBanner}
         return GADAdSizeFullBanner
 
+    }
+    
+    public var gadSize: GADAdSize {
+        switch self {
+        case .AdSizeBanner:          return GADAdSizeBanner
+        case .AdSizeLargeBanner:     return GADAdSizeLargeBanner
+        case .AdSizeMediumRectangle: return GADAdSizeMediumRectangle
+        case .AdSizeFullBanner:      return GADAdSizeFullBanner
+        case .AdSizeLeaderboard:     return GADAdSizeLeaderboard
+        case .AdSizeSkyscraper:      return GADAdSizeSkyscraper
+        case .AdSizeFluid:           return GADAdSizeFluid
+        case .automatic:             return Self.adequateSize
+        }
     }
     
     public var cgSize: CGSize {
@@ -72,22 +86,10 @@ public class AdBanner: NSObject, GADBannerViewDelegate, ObservableObject {
         private var isiPhone: Bool {
             UIDevice.current.userInterfaceIdiom == .phone
         }
-        
-
 
         init(adUnitId: String, size: AdBannerSize) {
             self.adUnitId = adUnitId
-            self.adSize = AdBannerSize.adequateSize
-        }
-            
-            
-        
-    //    func adSize(_ cgSize: AdBannerSize) -> some View {
-    //        return frame(width: cgSize.cgSize.width, height: cgSize.cgSize.height)
-    //    }
-        
-        func expectedFrame() -> some View {
-            return frame(width: adSize.size.width, height: adSize.size.height, alignment: .center)
+            self.adSize = size.gadSize
         }
         
         func makeUIViewController(context: Context) -> UIViewController {
@@ -107,13 +109,7 @@ public class AdBanner: NSObject, GADBannerViewDelegate, ObservableObject {
             return viewController
         }
         
-        
         func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     }
 }
-
-/*
- // body内 ---
- AdBanner(adUnitId: "***").expectedFrame()
- */
 #endif
