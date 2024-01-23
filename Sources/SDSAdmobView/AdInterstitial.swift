@@ -14,6 +14,14 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
     var interstitialAd: GADInterstitialAd?
     let adViewRepresentable: AdViewControllerRepresentable = AdViewControllerRepresentable()
     
+    var requestID: String {
+        #if DEBUG
+        return "ca-app-pub-3940256099942544/4411468910" // test-id
+        #else
+        return adUnitId
+        #endif
+    }
+    
     public var adInterstitialView: some View {
         adViewRepresentable.frame(width: 0, height: 0)
     }
@@ -28,13 +36,6 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
 
     // リワード広告の読み込み
     public func loadInterstitial() {
-        let requestID: String
-        #if DEBUG
-        requestID = "ca-app-pub-3940256099942544/4411468910" // test-id
-        #else
-        requestID = adUnitId
-        #endif
-
         GADInterstitialAd.load(withAdUnitID: requestID, request: GADRequest()) { (ad, error) in
             self.interstitialAd = ad
             self.interstitialAd?.fullScreenContentDelegate = self
@@ -52,8 +53,12 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
     // willShow
     public func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {}
 
-    // didDismiss
-    public func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {}
+    // didDismiss/ need to reset GADInterstitialAd
+    public func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        GADInterstitialAd.load(withAdUnitID: requestID, request: GADRequest()) { (ad, error) in
+            self.interstitialAd = ad
+        }
+    }
     
     public struct AdViewControllerRepresentable: UIViewControllerRepresentable {
         let vc = UIViewController()
@@ -62,7 +67,7 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
             return vc
         }
         
-        // No implementation needed. Nothing to update.
+        // No implementation needed. Nothing to be updated.
         public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) { }
     }
 }
