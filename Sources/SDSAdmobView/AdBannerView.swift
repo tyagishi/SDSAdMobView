@@ -68,7 +68,7 @@ public enum AdBannerSize {
 public class AdBanner: NSObject, GADBannerViewDelegate, ObservableObject {
     var interstitialAd: GADInterstitialAd?
     private let adView: AdBannerView
-    let adSize: AdBannerSize
+    public let adSize: AdBannerSize
     
     public init(adUnitId: String, size: AdBannerSize) {
         self.adSize = size
