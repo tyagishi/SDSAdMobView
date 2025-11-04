@@ -10,8 +10,8 @@ import Foundation
 import SwiftUI
 import GoogleMobileAds
 
-public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableObject {
-    var interstitialAd: GADInterstitialAd?
+public class AdInterstitial: NSObject, FullScreenContentDelegate, ObservableObject {
+    var interstitialAd: InterstitialAd?
     let adViewRepresentable: AdViewControllerRepresentable = AdViewControllerRepresentable()
     
     var requestID: String {
@@ -36,7 +36,7 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
 
     // リワード広告の読み込み
     public func loadInterstitial() {
-        GADInterstitialAd.load(withAdUnitID: requestID, request: GADRequest()) { (ad, error) in
+        InterstitialAd.load(with: requestID, request: Request()) { (ad, error) in
             self.interstitialAd = ad
             self.interstitialAd?.fullScreenContentDelegate = self
         }
@@ -45,17 +45,17 @@ public class AdInterstitial: NSObject, GADFullScreenContentDelegate, ObservableO
     // インタースティシャル広告の表示
     public func showInterstitial() {
         guard let interstitialAd = interstitialAd else { return }
-        interstitialAd.present(fromRootViewController: adViewRepresentable.vc)
+        interstitialAd.present(from: adViewRepresentable.vc)
     }
     // failed to show
-    public func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {}
+    public func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {}
 
     // willShow
-    public func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {}
+    public func adWillPresentFullScreenContent(_ ad: FullScreenPresentingAd) {}
 
     // didDismiss/ need to reset GADInterstitialAd
-    public func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        GADInterstitialAd.load(withAdUnitID: requestID, request: GADRequest()) { (ad, error) in
+    public func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        InterstitialAd.load(with: requestID, request: Request()) { (ad, error) in
             self.interstitialAd = ad
         }
     }
