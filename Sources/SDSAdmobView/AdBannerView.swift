@@ -68,7 +68,7 @@ import GoogleMobileAds
 public class AdBanner: NSObject, BannerViewDelegate, ObservableObject {
     var interstitialAd: InterstitialAd?
     private let adView: AdBannerView
-    let adSize: AdSize
+    public let adSize: AdSize
 //    public let oldAdSize: AdBannerSize
     
     static public var adequateAdSize: AdSize {
