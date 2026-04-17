@@ -72,7 +72,6 @@ public class AdBanner: NSObject, BannerViewDelegate, ObservableObject {
 //    public let oldAdSize: AdBannerSize
     
     static public var adequateAdSize: AdSize {
-        let check = AdSizeBanner
         if UIDevice.current.userInterfaceIdiom == .phone { return AdSizeBanner }
         return AdSizeFullBanner
     }
